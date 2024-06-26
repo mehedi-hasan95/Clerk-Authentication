@@ -18,7 +18,7 @@ export const useSignUpForm = () => {
   const methods = useForm<UserRegistrationProps>({
     resolver: zodResolver(UserRegistrationSchema),
     defaultValues: {
-      type: "owner",
+      role: "owner",
     },
     mode: "onChange",
   });
@@ -68,7 +68,7 @@ export const useSignUpForm = () => {
           const registered = await onCompleteUserRegistration(
             values.fullname,
             signUp.createdUserId,
-            values.type
+            values.role
           );
 
           if (registered?.status == 200 && registered.user) {

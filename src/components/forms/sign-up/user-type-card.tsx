@@ -64,7 +64,7 @@ const UserTypeCard = ({
               )}
             >
               <Input
-                {...register("type", {
+                {...register("role", {
                   onChange: (event) => setUserType(event.target.value),
                 })}
                 value={value}

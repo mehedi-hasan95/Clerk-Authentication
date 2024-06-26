@@ -4,10 +4,10 @@ import { db } from "@/lib/prisma";
 import { auth, clerkClient, currentUser } from "@clerk/nextjs/server";
 
 // Function to update Clerk role
-const updateClerkRole = async (clerkId: string, type: string) => {
+const updateClerkRole = async (clerkId: string, role: string) => {
   try {
     // Assume Clerk has a method to update user roles, this is just an example
-    await clerkClient.users.updateUser(clerkId, { publicMetadata: { type } });
+    await clerkClient.users.updateUser(clerkId, { publicMetadata: { role } });
     return true;
   } catch (error) {
     console.error("Failed to update Clerk role:", error);
@@ -17,24 +17,24 @@ const updateClerkRole = async (clerkId: string, type: string) => {
 export const onCompleteUserRegistration = async (
   fullname: string,
   clerkId: string,
-  type: string
+  role: string
 ) => {
   try {
     const registered = await db.user.create({
       data: {
         fullname,
         clerkId,
-        type,
+        role,
       },
       select: {
         fullname: true,
         id: true,
-        type: true,
+        role: true,
       },
     });
 
     if (registered) {
-      const clerkUpdateSuccess = await updateClerkRole(clerkId, type);
+      const clerkUpdateSuccess = await updateClerkRole(clerkId, role);
       // return { status: 200, user: registered };
       if (clerkUpdateSuccess) {
         return { status: 200, user: registered };
@@ -62,7 +62,7 @@ export const onLoginUser = async () => {
         select: {
           fullname: true,
           id: true,
-          type: true,
+          role: true,
         },
       });
       if (authenticated) {
